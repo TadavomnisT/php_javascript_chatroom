@@ -13,14 +13,6 @@ I used json ecoding along side with WebSocket protocol in JavaScript and PHP
 ```
 git clone https://github.com/TadavomnisT/php_javascript_chatroom.git
 ```
-or
-
-* directly in PHP :
-```php
-    if (!file_exists('testWatermark.php'))
-    copy('https://raw.githubusercontent.com/TadavomnisT/php_image_watermark/master/test.php', 'testWatermark.php');
-```
-
 Then run 'server.php' and open 'client.html' in browser and start chatting :)
 
 ```
@@ -31,9 +23,13 @@ php server.php
 ## IMPORTANT==============================================
 ## YOU MUST ENABLE `socket` EXTENTION IN YOUR PHP PACKAGE.
 ## IMPORTANT==============================================
+if you recieved following error:
+`couldn't load socket extention.`
+it means you haven't load `socket` extetion properly, so then if you have installed it already just uncomment the line:
+`;extension=php_sockets.dll ` to `extension=php_sockets.dll `
+in your `php.ini` file , else in case that you didn't install it, in windows you should download `.dll` file and put in in dll directory in linux and mac you can install it by commandline .
 
-
-## Other featurs:
+## ScreenShot:
 * Transparency of watermark logo
 * Rotatable text
 * available break lines
