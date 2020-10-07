@@ -1,4 +1,4 @@
-# Chatroom using PHP and JavaScrip
+# Chatroom using PHP and JavaScript
 # Socket Programming
 
 Hey there!
@@ -6,14 +6,14 @@ Hey there!
 I've scripted a simple server confuguration in PHP in order to handle a simple chatroom with several clients from JavaScript and HTML or any other GUI that can connect to a URL's specific port.
 I used the socket programming architecture and configured server on port number ```15000``` .
 This server and client can be used in purpose of learning socket programming and networks.
-I used json ecoding along side with WebSocket protocol in JavaScript and PHP
+I used json ecoding along side with WebSocket protocol in JavaScript and PHP.
 
 ## Usage
-* Simply just use :
+* Simply just install it using :
 ```
 git clone https://github.com/TadavomnisT/php_javascript_chatroom.git
 ```
-Then run 'server.php' and open 'client.html' in browser and start chatting :)
+Then run `server.php` and open `client.html` in browser and start chatting :)
 
 ```
 cd php_javascript_chatroom
