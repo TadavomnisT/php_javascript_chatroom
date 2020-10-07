@@ -2,8 +2,11 @@
 // //========================================================================
 // //========================PHP SERVER SCRIPT===============================
 // // ==========SOCKET PROGRAMING============NETWORK PROJECT=================
-// //=============BEHRAD BABAEI=================9618053======================
+// //==============================TadavomnisT===============================
 // //=========================GNU LICENCED SCRIPT============================
+
+//display error if you didn't enable the extention.
+if (!extension_loaded("sockets")) die ("couldn't load socket extention.");
 
 // setting some variables
 ini_set('max_execution_time', 0);//preventingphp default timeout
@@ -257,7 +260,7 @@ function dump($dumpedVar, $dumpInfo = "dumped Variable")
 // //========================================================================
 // //========================PHP SERVER SCRIPT===============================
 // // ==========SOCKET PROGRAMING============NETWORK PROJECT=================
-// //=============BEHRAD BABAEI=================9618053======================
+// //==============================TadavomnisT===============================
 // //=========================GNU LICENCED SCRIPT============================
 
 ?>
