@@ -33,8 +33,8 @@ in your `php.ini` file , else in case that you didn't install it, in windows you
 ![alt text](https://github.com/TadavomnisT/php_javascript_chatroom/blob/main/Screenshot.png)
 
 ## Development Info
-* Homepage: https://github.com/TadavomnisT/php_image_watermark/
-* Repo: https://github.com/TadavomnisT/php_image_watermark/
+* Homepage: https://github.com/TadavomnisT/php_javascript_chatroom/
+* Repo: https://github.com/TadavomnisT/php_javascript_chatroom/
 
 ## Author
 * Behrad.B
