@@ -1,5 +1,5 @@
 # Chatroom using PHP and JavaScript
-# Socket Programming
+# (PHP Socket Programming)
 
 Hey there!
 
