@@ -30,8 +30,7 @@ it means you haven't load `socket` extetion properly, so then if you have instal
 in your `php.ini` file , else in case that you didn't install it, in windows you should download `.dll` file and put in in dll directory in linux and mac you can install it by commandline .
 
 ## ScreenShot:
-https://github.com/TadavomnisT/php_javascript_chatroom/raw/main/Screenshot.png
- 
+https://github.com/TadavomnisT/php_javascript_chatroom/blob/main/Screenshot.png
 
 
 ## Development Info
