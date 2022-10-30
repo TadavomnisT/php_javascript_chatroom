@@ -42,7 +42,12 @@ while (true)
         $newSocket = socket_accept($socketResource);
         $clientSocketArray[] = $newSocket;// adding accepted socket connection to global socket arrray
         $header = socket_read($newSocket, 1024);//reading data from socket
-        doHandshake($header, $newSocket, HOST_NAME, PORT);//hand shaking with socket
+        if( !doHandshake($header, $newSocket, HOST_NAME, PORT) )//hand shaking with socket
+        {
+            $newSocketIndex = array_search($newSocket, $clientSocketArray);
+            unset($clientSocketArray[$newSocketIndex]);//delete client's socket
+            continue;
+        }
         socket_getpeername($newSocket, $client_ip_address);//getting client ip address and store it in $client_ip_address 
         $newSocketIndex = array_search($socketResource, $newSocketArray);//search for new sockets's index
         unset($newSocketArray[$newSocketIndex]);//deleting fetched socket
@@ -236,11 +241,14 @@ function doHandshake($received_header, $client_socket_resource, $host_name, $por
 				$headers[$matches[1]] = $matches[2];
 			}
 		}
-		$secKey = $headers['Sec-WebSocket-Key'];
+		$secKey = ( isset($headers['Sec-WebSocket-Key']) )? $headers['Sec-WebSocket-Key'] : false;
+        if ( !$secKey ) return false;
 		$secAccept = base64_encode(pack('H*', sha1($secKey . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11')));
 		$buffer = "HTTP/1.1 101 Web Socket Protocol Handshake\r\n" . "Upgrade: websocket\r\n" . "Connection: Upgrade\r\n" . "WebSocket-Origin: $host_name\r\n" . "WebSocket-Location: ws://$host_name:$port/demo/shout.php\r\n" . "Sec-WebSocket-Accept:$secAccept\r\n\r\n";
 		socket_write($client_socket_resource, $buffer, strlen($buffer));
+        return true;
 	} catch (\Throwable $th) {}
+    return false;
 }
 // ---------------------------------------------------------------------------------
 function dump($dumpedVar, $dumpInfo = "dumped Variable")
