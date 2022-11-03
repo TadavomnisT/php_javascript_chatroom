@@ -1,0 +1,125 @@
+@charset "UTF-8";
+
+body {
+    font-family: calibri;
+}
+
+.server_message {
+    color: rgb(255, 0, 0);
+    word-wrap: break-word;
+    max-width: 500px;
+}
+
+.ordinary_message {
+    color: #09F;
+    margin: 10px 0px;
+    font-size: 0.8em;
+}
+
+.self_message {
+    color: rgb(20, 26, 31);
+    margin: 10px 0px;
+    font-size: 0.8em;
+}
+
+.error {
+    color: #FF0000;
+}
+
+.ok {
+    color: #26af26;
+}
+
+.chat_message {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+#btnSend {
+    background: #26af26;
+    border: #26af26 1px solid;
+    border-radius: 4px;
+    color: #FFF;
+    display: block;
+    margin: 15px 0px;
+    padding: 10px 50px;
+    cursor: pointer;
+}
+
+#leaveChat {
+    background: #FF0000;
+    border: #FF0000 1px solid;
+    border-radius: 4px;
+    color: #FFF;
+    display: block;
+    margin: 15px 0px;
+    padding: 10px 50px;
+    cursor: pointer;
+}
+
+#getParticipants {
+    background: rgb(65, 163, 202);
+    border: rgb(65, 163, 202) 1px solid;
+    border-radius: 4px;
+    color: #FFF;
+    display: block;
+    margin: 15px 0px;
+    padding: 10px 50px;
+    cursor: pointer;
+}
+
+#chat_box {
+    background: #fff8f8;
+    border: 1px solid #ffdddd;
+    border-radius: 4px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    min-height: 300px;
+    padding: 10px;
+    overflow-y: scroll;
+    max-height: 400px;
+}
+
+.chat_box_message {
+    color: #09F;
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 1px solid #ffdddd;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.chat_input {
+    border: 1px solid #ffdddd;
+    border-top: 0px;
+    box-sizing: border-box;
+    padding: 10px 8px;
+    color: #191919;
+    word-wrap: break-word;
+    float: left;
+    max-width: 500px;
+}
+
+.server_input {
+    border: 1px solid #ffdddd;
+    border-top: 0px;
+    box-sizing: border-box;
+    padding: 10px 8px;
+    color: #191919;
+    word-wrap: break-word;
+    text-align: center;
+}
+
+.self_chat_input {
+    border: 1px solid #ffdddd;
+    border-top: 0px;
+    background-color: #818881;
+    box-sizing: border-box;
+    padding: 10px 8px;
+    color: #191919;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    float: right;
+    max-width: 500px;
+    border-radius: 15px 50px
+}
