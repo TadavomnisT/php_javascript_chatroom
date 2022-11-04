@@ -241,7 +241,7 @@ function doHandshake($received_header, $client_socket_resource, $host_name, $por
 				$headers[$matches[1]] = $matches[2];
 			}
 		}
-		$secKey = ( isset($headers['Sec-WebSocket-Key']) )? $headers['Sec-WebSocket-Key'] : false;
+		$secKey = ( empty($headers['Sec-WebSocket-Key']) )? $headers['Sec-WebSocket-Key'] : false;
         if ( !$secKey ) return false;
 		$secAccept = base64_encode(pack('H*', sha1($secKey . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11')));
 		$buffer = "HTTP/1.1 101 Web Socket Protocol Handshake\r\n" . "Upgrade: websocket\r\n" . "Connection: Upgrade\r\n" . "WebSocket-Origin: $host_name\r\n" . "WebSocket-Location: ws://$host_name:$port/demo/shout.php\r\n" . "Sec-WebSocket-Accept:$secAccept\r\n\r\n";
