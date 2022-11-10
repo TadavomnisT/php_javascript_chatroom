@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-        <!-- ========================================================================
-        ==================CLIENT SCRIPT USING HTML-CSS-JAVASCRIPT====================
-        ==============SOCKET PROGRAMING============NETWORK PROJECT===================
-        =================================TadavomnisT=================================
-        ==========================GNU LICENCED SCRIPT============================ -->
+    <!-- ========================================================================
+    ==================CLIENT SCRIPT USING HTML-CSS-JAVASCRIPT====================
+    ==============SOCKET PROGRAMING============NETWORK PROJECT===================
+    =================================TadavomnisT=================================
+    ==========================GNU LICENCED SCRIPT============================ -->
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <meta charset="utf-8">
@@ -30,37 +30,40 @@
         <meta property="og:description" content="Free Online Chat Room."/>
         <meta property="og:locale" content="en_US"/>
 
-        <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <meta name="apple-mobile-web-app-title" content="Chat Room - Free Online Chat Room">
-        <meta name="application-name" content="Chat Room">
-        <meta name="msapplication-tooltip" content="Free Online Chat Room">
-
         <link rel="stylesheet" href="assets/css/style.css"/>
         <script type="module" language="javascript" src="assets/js/script.js"></script>
     </head>
     <body>
-        <div style="width: 600px;height: 700px;float: left;">
+        <section id="loading"></section>
+        <section id="server_error">
+            <h2>Server is offline!</h2>
+            <button id="reload_page" class="btn" title="Click the button below to try reloading.">Reload</button>
+        </section>
+        <div id="main_box">
             <div id="master_errors" class="error"></div>
-            <div id="server_status" class="error">Server is offline!</div>
-            <form name="sign_up" id="sign_up" style="display: inline;">
-                <div id="nothing"></div>
-                <input type="text" name="chat_user" id="chat_user" placeholder="Name" class="chat_input" style="width: 100%;" required />
-                <input type="text" name="chat_message" id="chat_message" placeholder="Message" style="width: 570px;" hidden />
+            <section id="server_status"></section>
+            <form name="sign_up" id="sign_up">
+                <div id="nothing" scroll="hide"></div>
+                <input type="text" name="chat_user" id="chat_user" class="message_input" placeholder="Name" minlength="2" maxlength="22" translate="no" spellcheck="false" required />
+                <input type="text" name="chat_message" id="chat_message" maxlength="225" class="message_input" placeholder="Message" style="width: 570px;" hidden />
                 <br>
-                <input type="submit" id="btnSend" name="sign_me_up" value="Enter Chat!" style="display: inline;">
-            </form>
-            <form id="paricipants" style="display: inline;">
-                <input type="submit" id="getParticipants" name="getParticipants" value="See users" style="display: inline;visibility: hidden;">
-            </form>
-            <form id="leave" style="display: inline;">
-                <input type="submit" id="leaveChat" name="leaveChat" value="leave" style="display: inline;visibility: hidden;">
+                <div id="button_box">
+                    <input type="submit" id="btnSend" name="sign_me_up" value="Enter Chat!" class="btn">
+                    <input type="button" id="leave" name="leave" value="leave" class="btn hide">
+                </div>
             </form>
         </div>
-        <div style="float: left;">
-            <form id="users" style="display: inline;">
+        <button id="show_users" class="hide">
+            <img id="people-white" dark src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjhweCIgaGVpZ2h0PSIyOHB4IiB2aWV3Qm94PSIwIDAgMjggMjgiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8dGl0bGU+aWNfZmx1ZW50X3Blb3BsZV8yOF9yZWd1bGFyPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IvCflI0tUHJvZHVjdC1JY29ucyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9ImljX2ZsdWVudF9wZW9wbGVfMjhfcmVndWxhciIgZmlsbD0iIzIxMjEyMSIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPHBhdGggZD0iTTQsMTYgTDE1LDE2LjAwMSBDMTYuMDUzODE4MiwxNi4wMDEgMTYuOTE4MTE1NywxNi44MTY0ODU1IDE2Ljk5NDUxMDksMTcuODUxNjg0MiBMMTcsMTguMDAxIEwxNywyMC41IEMxNi45OTksMjQuNyAxMi43MTMsMjYgOS41LDI2IEM2LjM1MTI2LDI2IDIuMTcxMDUwNCwyNC43NTE0OCAyLjAwNTEwMTUxLDIwLjc0ODUzMjggTDIsMjAuNSBMMiwxOCBDMiwxNi45NDYxODE4IDIuODE2Mzk2NjksMTYuMDgxODg0MyAzLjg1MDgwODQxLDE2LjAwNTQ4OTEgTDQsMTYgWiBNMjQsMTYgTDI0LjE0OTE5MTYsMTYuMDA1NDg5MSBDMjUuMTMxODgyNywxNi4wNzgwNjQ1IDI1LjkxNzgxNTMsMTYuODYxNzIxOCAyNS45OTM5NTE4LDE3Ljg0MzQyMzUgTDI2LDE4IEwyNiwyMCBDMjUuOTk5LDIzLjc1OSAyMi41NywyNSAyMCwyNSBDMTguOTQyLDI1IDE3Ljc0MSwyNC43ODUgMTYuNjkxLDI0LjI3NSBDMTcuMDA5LDIzLjg5NyAxNy4yNzgsMjMuNDc3IDE3LjQ4OCwyMy4wMDcgQzE4LjQ0NTYsMjMuNDI3IDE5LjQ3ODk4NjcsMjMuNDkyNDU3OCAxOS45MTU3Nzg0LDIzLjQ5OTMxODggTDIwLjIwNDM0MzMsMjMuNDk2MzIyNSBDMjEuMjQwMDU1NiwyMy40NjA2NjI5IDI0LjMzNDc2NiwyMy4xMTE2NTcyIDI0LjQ5MzY0NzEsMjAuMjMyNTkxNCBMMjQuNSwyMCBMMjQuNSwxOCBDMjQuNSwxNy43NTQ2NjY3IDI0LjMyMjIyMjIsMTcuNTUwNDE5OCAyNC4wODk1NzQ4LDE3LjUwODA2MDQgTDI0LDE3LjUgTDE3Ljk0OSwxNy41MDEgQzE3Ljg2NSwxNi45OTk2MjUgMTcuNjU1NDM3NSwxNi41NDM0MjE5IDE3LjM1NDQ3ODUsMTYuMTYwNTI3MyBMMTcuMjIsMTYuMDAxIEwyNCwxNiBaIE00LDE3LjUgTDMuODk5MzQ0LDE3LjUxIEMzLjc3NDk2LDE3LjUzNTI4IDMuNjksMTcuNjAyOCAzLjY0NiwxNy42NDYgQzMuNjAyOCwxNy42OSAzLjUzNTI4LDE3Ljc3NDMyIDMuNTEsMTcuODk4OTYgTDMuNSwxOCBMMy41LDIwLjUgQzMuNSwyMS44MzkgNC4wODcsMjIuODI5IDUuMjk1LDIzLjUyNSBDNi4yOTEzNTcxNCwyNC4xMDA3MTQzIDcuNjg0MzQ2OTQsMjQuNDQ3OTMzNyA5LjE1ODUxMDkzLDI0LjQ5NDU5OTEgTDkuNSwyNC41IEw5LjkzNDg3MTEzLDI0LjQ4OTc4NDYgQzExLjQ1NTQ1NTQsMjQuNDIxOTA3MyAxNS4zMTQwMzcyLDIzLjkzMzE5NTEgMTUuNDkzNTE4MSwyMC43MzIyODAzIEwxNS41LDIwLjQ5OSBMMTUuNSwxOC4wMDEgQzE1LjUsMTcuNzU2NTU1NiAxNS4zMjIyMjIyLDE3LjU1MTYxNzMgMTUuMDg5NTc0OCwxNy41MDkwOTMzIEwxNSwxNy41MDEgTDQsMTcuNSBaIE05LjUsMyBDMTIuNTM4LDMgMTUsNS40NjMgMTUsOC41IEMxNSwxMS41MzcgMTIuNTM4LDE0IDkuNSwxNCBDNi40NjIsMTQgNCwxMS41MzcgNCw4LjUgQzQsNS40NjMgNi40NjIsMyA5LjUsMyBaIE0yMC41LDUgQzIyLjk4NSw1IDI1LDcuMDE1IDI1LDkuNSBDMjUsMTEuOTg1IDIyLjk4NSwxNCAyMC41LDE0IEMxOC4wMTUsMTQgMTYsMTEuOTg1IDE2LDkuNSBDMTYsNy4wMTUgMTguMDE1LDUgMjAuNSw1IFogTTkuNSw0LjUgQzcuMjk0LDQuNSA1LjUsNi4yOTQgNS41LDguNSBDNS41LDEwLjcwNiA3LjI5NCwxMi41IDkuNSwxMi41IEMxMS43MDYsMTIuNSAxMy41LDEwLjcwNiAxMy41LDguNSBDMTMuNSw2LjI5NCAxMS43MDYsNC41IDkuNSw0LjUgWiBNMjAuNSw2LjUgQzE4Ljg0Niw2LjUgMTcuNSw3Ljg0NiAxNy41LDkuNSBDMTcuNSwxMS4xNTQgMTguODQ2LDEyLjUgMjAuNSwxMi41IEMyMi4xNTQsMTIuNSAyMy41LDExLjE1NCAyMy41LDkuNSBDMjMuNSw3Ljg0NiAyMi4xNTQsNi41IDIwLjUsNi41IFoiIGlkPSLwn46oLUNvbG9yIj48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=" alt="👥" loading="lazy">
+            <img id="people-black" dark src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjhweCIgaGVpZ2h0PSIyOHB4IiB2aWV3Qm94PSIwIDAgMjggMjgiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8dGl0bGU+aWNfZmx1ZW50X3Blb3BsZV8yOF9maWxsZWQ8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZyBpZD0i8J+UjS1Qcm9kdWN0LUljb25zIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iaWNfZmx1ZW50X3Blb3BsZV8yOF9maWxsZWQiIGZpbGw9IiMyMTIxMjEiIGZpbGwtcnVsZT0ibm9uemVybyI+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik00LDE2IEwxNSwxNi4wMDEgQzE2LjA1MzgxODIsMTYuMDAxIDE2LjkxODExNTcsMTYuODE2NDg1NSAxNi45OTQ1MTA5LDE3Ljg1MTY4NDIgTDE3LDE4LjAwMSBMMTcsMjAuNSBDMTYuOTk5LDI0LjcgMTIuNzEzLDI2IDkuNSwyNiBDNi4zNTEyNiwyNiAyLjE3MTA1MDQsMjQuNzUxNDggMi4wMDUxMDE1MSwyMC43NDg1MzI4IEwyLDIwLjUgTDIsMTggQzIsMTYuOTQ2MTgxOCAyLjgxNjM5NjY5LDE2LjA4MTg4NDMgMy44NTA4MDg0MSwxNi4wMDU0ODkxIEw0LDE2IFogTTE3LjIyLDE2LjAwMSBMMjQsMTYgQzI1LjA1MzgxODIsMTYgMjUuOTE4MTE1NywxNi44MTYzOTY3IDI1Ljk5NDUxMDksMTcuODUwODA4NCBMMjYsMTggTDI2LDIwIEMyNS45OTksMjMuNzU5IDIyLjU3LDI1IDIwLDI1IEMxOC45NDIsMjUgMTcuNzQxLDI0Ljc4NSAxNi42OTEsMjQuMjc1IEMxNy40NDMyNjY3LDIzLjM4MDg2NjcgMTcuOTMxNTg2NywyMi4yNDI4MjIyIDE3Ljk5MzM1MjYsMjAuODExMjcxNCBMMTgsMjAuNSBMMTgsMTguMDAxIEMxOCwxNy4yOTkxODE4IDE3Ljc1MTIzOTcsMTYuNjYwMTczNiAxNy4zNDYxMzA3LDE2LjE1MDA5MDkgTDE3LjIyLDE2LjAwMSBMMjQsMTYgTDE3LjIyLDE2LjAwMSBaIE05LjUsMyBDMTIuNTM3LDMgMTUsNS40NjMgMTUsOC41IEMxNSwxMS41MzcgMTIuNTM3LDE0IDkuNSwxNCBDNi40NjMsMTQgNCwxMS41MzcgNCw4LjUgQzQsNS40NjMgNi40NjMsMyA5LjUsMyBaIE0yMC41LDUgQzIyLjk4NSw1IDI1LDcuMDE1IDI1LDkuNSBDMjUsMTEuOTg1IDIyLjk4NSwxNCAyMC41LDE0IEMxOC4wMTUsMTQgMTYsMTEuOTg1IDE2LDkuNSBDMTYsNy4wMTUgMTguMDE1LDUgMjAuNSw1IFoiIGlkPSLwn46oLUNvbG9yIj48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=" alt="👥" loading="lazy">
+        </button>
+        <section id="users_box" class="hide">
+            <form id="users">
+                <input type="button" name="refresh_users" id="refresh_users" value="refresh users" class="btn" />
+                <div id="user_names" class="select" scroll="hide"></div>
+                <input type="text" name="private_message" id="private_message" maxlength="225" class="message_input" placeholder="private message" translate="no" spellcheck="false" required />
+                <input type="submit" id="sendPrivateMessage" name="sendPrivateMessage" value="send private message!" class="btn" />
             </form>
-        </div>
+        </section>
     </body>
 </html>
