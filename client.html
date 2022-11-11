@@ -1,358 +1,935 @@
 <!DOCTYPE html>
 <html lang="en">
-        <!-- ========================================================================
-        ==================CLIENT SCRIPT USING HTML-CSS-JAVASCRIPT====================
-        ==============SOCKET PROGRAMING============NETWORK PROJECT===================
-        =================================TadavomnisT=================================
-        ==========================GNU LICENCED SCRIPT============================ -->
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat room</title>
-    <script src="js/jquery-3.1.0.min.js"></script>
-    <style>
-        /* =============================Doing some CSS styling to the page================================= */
-        body {
-            font-family: calibri;
-        }
-        
-        .server_message {
-            color: rgb(255, 0, 0);
-            word-wrap: break-word;
-            max-width: 500px;
-        }
-        
-        .ordinary_message {
-            color: #09F;
-            margin: 10px 0px;
-            font-size: 0.8em;
-        }
-        
-        .self_message {
-            color: rgb(20, 26, 31);
-            margin: 10px 0px;
-            font-size: 0.8em;
-        }
-        
-        .error {
-            color: #FF0000;
-        }
-        
-        .ok {
-            color: #26af26;
-        }
-        
-        .chat_message {
-            border-bottom-left-radius: 4px;
-            border-bottom-right-radius: 4px;
-        }
-        
-        #btnSend {
-            background: #26af26;
-            border: #26af26 1px solid;
-            border-radius: 4px;
-            color: #FFF;
-            display: block;
-            margin: 15px 0px;
-            padding: 10px 50px;
-            cursor: pointer;
-        }
-        
-        #leaveChat {
-            background: #FF0000;
-            border: #FF0000 1px solid;
-            border-radius: 4px;
-            color: #FFF;
-            display: block;
-            margin: 15px 0px;
-            padding: 10px 50px;
-            cursor: pointer;
-        }
-        
-        #getParticipants {
-            background: rgb(65, 163, 202);
-            border: rgb(65, 163, 202) 1px solid;
-            border-radius: 4px;
-            color: #FFF;
-            display: block;
-            margin: 15px 0px;
-            padding: 10px 50px;
-            cursor: pointer;
-        }
-        
-        #chat_box {
-            background: #fff8f8;
-            border: 1px solid #ffdddd;
-            border-radius: 4px;
-            border-bottom-left-radius: 0px;
-            border-bottom-right-radius: 0px;
-            min-height: 300px;
-            padding: 10px;
-            overflow-y: scroll;
-            max-height: 400px;
-        }
-        
-        .chat_box_message {
-            color: #09F;
-            padding: 5px 10px;
-            background-color: #fff;
-            border: 1px solid #ffdddd;
-            border-radius: 4px;
-            display: inline-block;
-        }
-        
-        .chat_input {
-            border: 1px solid #ffdddd;
-            border-top: 0px;
-            box-sizing: border-box;
-            padding: 10px 8px;
-            color: #191919;
-            word-wrap: break-word;
-            float: left;
-            max-width: 500px;
-        }
-        
-        .server_input {
-            border: 1px solid #ffdddd;
-            border-top: 0px;
-            box-sizing: border-box;
-            padding: 10px 8px;
-            color: #191919;
-            word-wrap: break-word;
-            text-align: center;
-        }
-        
-        .self_chat_input {
-            border: 1px solid #ffdddd;
-            border-top: 0px;
-            background-color: #818881;
-            box-sizing: border-box;
-            padding: 10px 8px;
-            color: #191919;
-            text-overflow: ellipsis;
-            word-wrap: break-word;
-            float: right;
-            max-width: 500px;
-            border-radius: 15px 50px
-        }
+    <!-- ========================================================================
+    ==================CLIENT SCRIPT USING HTML-CSS-JAVASCRIPT====================
+    ==============SOCKET PROGRAMING============NETWORK PROJECT===================
+    =================================TadavomnisT=================================
+    ==========================GNU LICENCED SCRIPT============================ -->
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
 
-        /* =============================End of CSS styling to the page================================= */
+        <!-- Old versions of IE need this to be in the first response chunk -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    </style>
-</head>
+        <title>Chat Room - Free Online Chat Room</title>
+        <meta name="theme-color" content="dark">
+        
+        <meta name="viewport" content="width=device-width,initial-scale=0.8" />
+        <meta name="title" content="Chat Room - Free Online Chat Room">
+        <meta name="description" content="Free Online Chat Room." />
+        <meta name="keywords" content="free chat, free chat online, teen chat room, free chat rooms, chat room website, chat site, single chat room, girls chat room, chatting app, strangers chat room, free chat app, free chat now" />
+        <meta name="robots" content="index, follow" />
+        <meta name="revisit-after" content="1 days" />
+        <!-- <meta name="author" content="" /> -->
 
-<body>
-    <script language="javascript" type="text/javascript"> 
-    // ================================================Javascript codes start here========================================
-      if (typeof NodeList.prototype.forEach !== 'function') {//Taking care of forEach object Problem in FireFox,Internet Explorer,WaterFox
-            NodeList.prototype.forEach = Array.prototype.forEach;
-        }
+        <!-- <meta property="og:url" content=""/> -->
+        <!-- <meta property="og:site_name" content=""/> -->
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="Chat Room - Free Online Chat Room" />
+        <meta property="og:description" content="Free Online Chat Room."/>
+        <meta property="og:locale" content="en_US"/>
 
-        function showMessage(messageHTML) { //a function for appending a div object which contains messages into chatbox
-            $('#chat_box').append(messageHTML);
-        }
-        $(document).ready(function() { //starting connecting socket and stay connected for ever
-            var socket = new WebSocket("ws://localhost:15000/server.php");
-            socket.onopen = function(event) { //if connected ro a websocket on event will show sign up
-                document.getElementById("server_status").setAttribute("class", "ok");
-                document.getElementById("server_status").innerHTML = "Server is online! Enter a unique name to join the chat!";
-            }
-            socket.onmessage = function(event) { //whenever a message (data) is recieved, it'll fetch it and do something about the recieved message
-                console.log(event.data); //logging every recieved data in console , for developers only, you may comment this line
-                var Data = JSON.parse(event.data); //parsing (Json decoding) message
-                var element = document.getElementById('sign_up');
-                if (typeof(element) != 'undefined' && element != null) { // this condition is true, if the user didin't sign up yet
-                    if (Data.request == "error") {//if signing up wasn't succesful...showing Errors
-                        document.getElementById("master_errors").innerHTML = Data.error;
-                    } else {//if signing up was succesful:
-                        if (Data.request == "message") {
-                            try {//displaying chat box and buttons instead of signing up form
-                                document.getElementById("master_errors").innerHTML = "";
-                                document.getElementById("server_status").innerHTML = "";
-                                document.getElementById("sign_up").setAttribute("name", "frmChat");
-                                document.getElementById("sign_up").setAttribute("id", "frmChat");
-                                document.getElementById("nothing").setAttribute("id", "chat_box");
-                                document.getElementById("btnSend").setAttribute("name", "send_chat_message");
-                                document.getElementById("btnSend").setAttribute("value", "Send");
-                                document.getElementById("chat_message").hidden = false;
-                                document.getElementById("getParticipants").style.visibility = "visible";
-                                document.getElementById("leaveChat").style.visibility = "visible";
-                                document.getElementById("chat_message").required = true;
-                                document.getElementById("chat_message").value = "";
-                                document.getElementById("chat_user").hidden = true;
-                            } catch (e) {}
-                            //seting type of message
-                            if (Data.message.type == "server") {
-                                var type = "server_";
-                            } else {
-                                if (Data.message.from == document.getElementById("chat_user").value) {
-                                    var type = "self_";
-                                } else var type = "ordinary_";
-                            }
-                            showMessage("<div class='" + type + "message'>" + Data.message.message + "</div>"); //Showing messages one from server and one from self
-                        } else {
-                            document.getElementById("master_errors").innerHTML = "Unknown Error!";
-                        }
-                    }
-                } else {// this else will execute when user successfully signed up
-                    if (Data.request == "message") { //handling message if the data request was a message
-                        if (Data.message.type == "server") {//setting type of displaying message if it was from server
-                            showMessage("<div class='server_input'>" + Data.message.message + "</div>");
-                        } else {//setting type of displaying message if it was a public\private\private_response message
-                            if (Data.message.from == document.getElementById("chat_user").value) {// if the message was from user himself
-                                if (Data.message.type == "public") {//showing public typed self message 
-                                    showMessage("<div width='100%' align='right'><div class='self_chat_input'>" + Data.message.message + "</div></div><br style='clear:both' />");
-                                }//by uncommenting following part you will be able to display a private messaged from user to user himself!
-                                //// **************************************************************************
-                                //     else if (Data.message.type == "private") {
-                                //         var private_info = "<span style='color:red'>&lt;Private Message&gt;</span><br>";
-                                //         showMessage("<div style='overflow:hidden;border-radius: 15px 50px 30px 5px;width=500px;' class='chat_box_message'>"+Data.message.from+":<br> <div class='chat_input'>"+private_info+Data.message.message+"</div></div><br style='clear:both' />");
-                                // }
-                                //// **************************************************************************
-                                else if (Data.message.type == "private_response") {//showing private_response typed message : This will recieve if sending a private message was succesfull 
-                                    var private_info = "<span style='color:blue'>&lt;Private Message&gt; to ";
-                                    for (let index = 0; index < (Data.message.to).length; index++) {//showing guys that recieved your private message
-                                        private_info += Data.message.to[index] + ",";
-                                    }
-                                    private_info += ":</span><br>";
-                                    showMessage("<div width='100%' align='right'><div class='self_chat_input'>" + private_info + Data.message.message + "</div></div><br style='clear:both' />");
-                                }
-                            } else {
-                                if (Data.message.type == "public") { // showing public typed messages recieved from others
-                                    showMessage("<div style='overflow:hidden;border-radius: 15px 50px 30px 5px;width=500px;' class='chat_box_message'>" + Data.message.from + ":<br> <div class='chat_input'>" + Data.message.message + "</div></div><br style='clear:both' />");
-                                } else if (Data.message.type == "private") {// showing private typed messages recieved from others
-                                    var private_info = "<span style='color:red'>&lt;Private Message&gt;</span><br>";
-                                    showMessage("<div style='overflow:hidden;border-radius: 15px 50px 30px 5px;width=500px;' class='chat_box_message'>" + Data.message.from + ":<br> <div class='chat_input'>" + private_info + Data.message.message + "</div></div><br style='clear:both' />");
-                                }
-                            }
-                        }
-                    } else if (Data.request == "participants") {// showing response recieved from server in order to get chat participants (attendees)
-                        var delNode = document.getElementById("users");
-                        while (delNode.firstChild) {
-                            delNode.removeChild(delNode.lastChild);
-                        }
-                        Data.participants.forEach(myForEach);//show each guy in chat as a choice to send message
+        <style type="text/css" rel="stylesheet" title="Styles">
+            
+/* theme.css */
 
-                        function myForEach(user) {
-                            $('#users').append("<input type='checkbox' id=" + user + " name=" + user + " value=" + user + "><label for=" + user + ">" + user + "</label><br>");
-                        }
-                        $('#users').append("<input type='text' name='private_message' id='private_message' placeholder='private message' class='chat_input' style='width: 100%;' required />");
+:root {
+    --background-color: #f3f3f3;
+    --background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAIAAAAiOjnJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo3QUQwNjJEMDQ0RURFNzExOThEMkI1QjgyMDc1N0NFMyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozQTM2OTg2RTdEODYxMUVBQjhCRkRDQkYxOUFERUIzQiIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozQTM2OTg2RDdEODYxMUVBQjhCRkRDQkYxOUFERUIzQiIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjcxNDQyMUNCQ0E3NUVBMTFCOTM4QjBBRUZFRERFMjc1IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjdBRDA2MkQwNDRFREU3MTE5OEQyQjVCODIwNzU3Q0UzIi8+IDwvcmRmOkRlc2NyaXB0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");
+    --background-o-color: #f1f1f1;
+    --background-chat-box-color: rgba(241, 241, 241, 0.6);
+    --background-message-box-color: #4DA4EB;
+    --server-message-color: #127552;
+    --text-color: #181818;
+}
 
-                        $('#users').append("<input type='submit' id='sendPrivateMessage' name='sendPrivateMessage' value='send private message!' >");
-                        document.getElementById("getParticipants").value = "refresh users";
-                    } else { //if other things recieve from server, consider those error!
-                        document.getElementById("master_errors").innerHTML = "Unknown Error!";
-                    }
-                    $('#chat_message').val(''); //cleaning textbox
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #131313;
+        --background-image: url("data:image/png;base64,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");
+        --background-o-color: #171717;
+        --background-chat-box-color: rgba(23, 23, 23, 0.6);
+        --background-message-box-color: #1e293b;
+        --server-message-color: #00ffa6;
+        --text-color: #f1f1f1;
+    }
+
+    img[dark] {
+        filter: invert(1);
+    }
+}
+
+/* style.css */
+
+@import url("data:text/css;base64,QGNoYXJzZXQgIlVURi04IjtAbWVkaWEgcHJpbnQgeyAqIHsgZGlzcGxheTogbm9uZSAhaW1wb3J0YW50OyB9IH0=");
+
+*:not(html):not(body):not(head) {
+    font-family: calibri, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    outline: none;
+}
+
+*:not(input[type="text"]) {
+    user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -ms-touch-select: none;
+    -webkit-user-select: none;
+    user-zoom: none;
+    resize: none;
+    outline: none !important;
+}
+
+body, #loading, #server_error {
+    background: var(--background-color) var(--background-image);
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    -webkit-overflow-scrolling: hidden;
+}
+
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 12;
+
+    width: 100%;
+    height: 100%;
+}
+
+#server_status {
+    margin: 16px 0;
+}
+
+#main_box {
+    max-width: 600px;
+    max-height: 700px;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+#sign_up {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+#show_users {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    width: 45px;
+    height: 45px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 2px rgba(170, 170, 170, 0.6);
+    background-color: var(--background-o-color);
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 5;
+    border: 0;
+}
+
+img#people-black {
+    display: none;
+}
+
+#show_users:hover img#people-white {
+    display: none !important;
+}
+
+#show_users:hover img#people-white ~ img#people-black {
+    display: block !important;
+}
+
+#users_box {
+    background-color: var(--background-o-color);
+    box-shadow: 0 0 2px rgba(170, 170, 170, 0.6);
+    width: calc(100vw / 3);
+    min-width: 300px;
+    max-width: 520px;
+    height: 600px;
+    border-radius: 4px;
+}
+
+#users_box , #users_box form {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+@media only screen and (max-width: 1050px) {
+    #show_users {
+        display: flex !important;
+    }
+    #users_box {
+        background: var(--background-color) var(--background-image);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        max-width: 100vw;
+        height: 100vh;
+        transition: left .6s ease;
+    }
+    #users_box:not(.active) {
+        display: none !important;
+    }
+}
+
+#user_names {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    overflow: hidden scroll;
+    max-height: calc(100vh / 3);
+}
+
+#user_names label {
+    display: flex;
+    flex-flow: row nowrap;
+    color: var(--text-color);
+}
+
+#user_names input:checked + label img:nth-child(1),
+#user_names img:nth-child(2) {
+    display: none;
+}
+
+#user_names input:checked + label img:nth-child(2) {
+    display: block !important;
+}
+
+#users_box form *:not(label):not(img) {
+    margin: 14px;
+}
+
+#private_message {
+    width: calc(100% - 20px);
+}
+
+#frmChat {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+#chat_message {
+    margin-top: 14px;
+}
+
+#chat_box {
+    background: var(--background-chat-box-color);
+    color: var(--text-color);
+    width: calc(100% - 43px);
+    max-width: calc(100vw - 45px);
+    min-height: 400px;
+    max-height: 50vh;
+
+    display: flex;
+    flex-flow: column nowrap;
+
+    border: 1px solid #43434338;
+    border-radius: 4px;
+    overflow: hidden scroll;
+    padding: 16px 14px;
+    margin: 7px;
+}
+
+#server_status {
+    color: #26af26;
+}
+
+.error {
+    color: #FF0000;
+}
+
+.message_input {
+    background-color: transparent;
+    min-width: 300px;
+    width: calc(320px + 7vw);
+    max-width: calc(100vw - 25px);
+    height: 37;
+    border: 0;
+    border-bottom: 2px solid #0596f7;
+    padding: 10px 8px;
+    font-size: 15px;
+    color: var(--text-color);
+    word-wrap: break-word;
+    transition: border .5s ease-in-out;
+}
+
+.message_input:focus {
+    border-style: groove;
+}
+
+.server_message {
+    color: var(--server-message-color);
+    margin-bottom: 14px;
+}
+
+.self_message {
+    color: var(--text-color);
+    margin: 10px 0px;
+    font-size: 16px;
+}
+
+.ordinary_message {
+    color: #09F;
+    margin: 10px 0px;
+    font-size: 16px;
+}
+
+.server_message_i {
+    color: var(--text-color);
+    border: 1px solid rgba(120, 120, 120, 0.4);
+    box-sizing: border-box;
+    border-radius: 4px;
+    word-wrap: break-word;
+    text-align: center;
+    max-width: 75%;
+    margin: 14px auto;
+    padding: 10px;
+}
+
+.chat_box_message, .self_chat_input {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.self_chat_input {
+    background-color: var(--background-message-box-color);
+    padding: 10px;
+    margin: 14px;
+    color: var(--text-color);
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    float: right;
+    min-width: 36px;
+    max-width: 80%;
+    border-radius: 5px 5px 0 5px;
+    position: relative;
+}
+
+.self_chat_input span.wt {
+    color: #0077bc;
+    margin-bottom: 3px;
+}
+
+.self_chat_input .svg_msg_box {
+    position: absolute;
+    bottom: -1px;
+    right: -8px;
+}
+
+.svg_fill_msg_box {
+    fill: var(--background-message-box-color);
+}
+
+.chat_box_message {
+    background-color: var(--background-message-box-color);
+    padding: 10px;
+    margin: 14px;
+    color: #0077bc;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    float:left;
+    min-width: 36px;
+    width: unset;
+    max-width: 80%;
+    min-height: 53px;
+    border-radius: 5px 5px 5px 0;
+    position: relative;
+}
+
+.chat_box_message .svg_msg_box {
+    position: absolute;
+    bottom: -1px;
+    left: -8px;
+}
+
+.chat_input {
+    min-width: 36px;
+    max-width: 80%;
+    color: var(--text-color);
+    word-wrap: break-word;
+    padding: 10px;
+    padding-bottom: 4px;
+}
+
+#server_error {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 7;
+
+    color: rgb(255, 0, 0);
+    text-shadow: 1px 1px 1.3px rgba(7, 0, 0, 0.7);
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+}
+
+#server_error > h2 {
+    margin: 18px 0 calc(180px + 2.6vw);
+    font-size: calc(22px + 1.4vw);
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+#server_error > button#reload_page {
+    --btn-color: var(--background-o-color);
+    color: var(--text-color);
+    box-shadow: 0 0 2px rgba(170, 170, 170, 0.6);
+}
+
+.btn {
+    background: var(--btn-color);
+    border: var(--btn-color) 1px solid;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 15px;
+
+    white-space: nowrap;
+    text-align: center;
+    line-height: 18px;
+    cursor: pointer;
+
+    padding: 10px 50px;
+    margin: 15px 0px;
+    display: block;
+}
+
+#refresh_users {
+    --btn-color: #0099ff;
+}
+
+#button_box {
+    margin-top: 14px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+}
+
+#btnSend, #sendPrivateMessage {
+    --btn-color: #26af26;
+}
+
+#leave {
+    --btn-color: #FF0000;
+}
+
+.flip, .flip-xy {
+    -webkit-transform: scaleX(-1) scaleY(-1);
+    transform: scaleX(-1) scaleY(-1);
+}
+
+.flip-x {
+    -webkit-transform: scaleX(-1) scaleY(-1);
+    transform: scaleX(-1) scaleY(-1);
+}
+
+.flip-y {
+    -webkit-transform: scaleY(-1);
+    transform: scaleY(-1);
+}
+
+[scroll="hide"]::-webkit-scrollbar {
+    -ms-overflow-style: none;
+    /* IE 11 */
+    scrollbar-width: none;
+    /* Firefox 64 */
+    scrollbar-color: transparent transparent;
+    background-color: transparent;
+    visibility: hidden;
+    display: none;
+    width: 0;
+}
+
+.hide {
+    opacity: 0 !important;
+    display: none !important;
+    visibility: hidden !important;
+}
+        </style>
+        <script type="text/javascript" language="javascript"> /* script.js */
+
+// taking care of forEach object problem in FireFox, Internet Explorer, WaterFox
+if (typeof NodeList.prototype.forEach !== 'function') NodeList.prototype.forEach = Array.prototype.forEach;
+
+const selector = (selectors = "") => {
+
+    try { var select = document.querySelectorAll(selectors); } catch (error) { }
+
+    return ((!select) ? false : ((select.length == 0) ? false : ((select.length == 1) ? select[0] : select)));
+
+}
+
+/**
+ * @param {String} HTML representing any number of sibling elements
+ * @return {NodeList} 
+ */
+const createElementFromHTML = (htmlString = "") => {
+
+    var template = document.createElement('template');
+
+    template.innerHTML = htmlString;
+
+    return template.content;
+
+}
+
+const createText = (messageHTML = "") => messageHTML.replace('<', '«').replace('>', '»');
+
+// a function for appending a div object which contains messages into chatbox
+const showMessage = (messageHTML = "") => selector("#chat_box").append(createElementFromHTML(messageHTML));
+
+window.addEventListener("DOMContentLoaded", event => {
+
+    const loading = selector("#loading");
+
+    var fadeOutInterval;
+
+    const fadeOut = (element, timing = 7) => {
+
+        clearInterval(fadeOutInterval);
+
+        element.fadeOut = timing => {
+
+            var newValue = 1;
+
+            element.style.opacity = 1;
+
+            fadeOutInterval = setInterval(() => {
+
+                if (newValue > 0) newValue -= 0.01;
+                else if (newValue < 0) {
+
+                    element.style.opacity = 0;
+
+                    element.style.display = "none";
+
+                    clearInterval(fadeOutInterval);
+
                 }
-            };
-            socket.onerror = function(event) { //if there was an error related to socket
-                showMessage("<div class='error'>Problem due to some Error</div>");
-            };
-            socket.onclose = function(event) { //if socked was closed by server
-                showMessage("<div class='chat-connection-ack'>Connection Closed</div>");
-            };
-            $('#sign_up').on("submit", function(event) {//sending a sign_up\message request to server if user pressed button
-                event.preventDefault(); //prevents page reloading
-                var testelement = document.getElementById('sign_up');
-                if (typeof(testelement) != 'undefined' && testelement != null) {//checking if user hav'nt already signed up
-                    var messageJSON = { //providing requset
-                        request: "sign_up",
-                        name: $('#chat_user').val(),
-                    };
-                    socket.send(JSON.stringify(messageJSON));//sedning Json encoded request 
-                } else { //this else is true when user is already signed up and wants to send message
-                    var messageJSON = {//providing requset message
-                        request: "public_message",
-                        message: {
-                            message: $('#chat_message').val(),
-                            from: $('#chat_user').val()
-                        }
-                    };
-                    socket.send(JSON.stringify(messageJSON));//sedning Json encoded request 
-                    document.getElementById("chat_message").value = "";//cleaning textbox
-                }
 
-            });
-            $('#paricipants').on("submit", function(event) { //sending a get_participants request to server if user pressed button
-                event.preventDefault();//prevents page reloading
-                var testelement = document.getElementById('getParticipants').style.visibility;
-                if (testelement != "hidden") {//checking if the button isn't hidden
-                    var messageJSON = {//providing requset message
-                        request: "participants",
-                        from: $('#chat_user').val()
-                    };
-                    socket.send(JSON.stringify(messageJSON));//sedning Json encoded request 
-                }
-            });
-            $('#leave').on("submit", function(event) {//sending a leave_chat request to server if user pressed button
-                event.preventDefault();//prevents page reloading
-                var testelement = document.getElementById('leaveChat').style.visibility;
-                if (testelement != "hidden") {//checking if the button isn't hidden
+                element.style.opacity = newValue;
 
-                    var messageJSON = {//providing requset message
-                        request: "leave",
-                        from: $('#chat_user').val()
-                    };
-                    socket.send(JSON.stringify(messageJSON));//sedning Json encoded request 
-                    window.location.reload(false);//reloading the page
-                }
-            });
-            $('#users').on("submit", function(event) {//sending a private_message request to server if user pressed button
-                event.preventDefault();//prevents page reloading
-                var testelement = document.getElementById('sendPrivateMessage');
-                if (typeof(testelement) != 'undefined' && testelement != null) {//checking if the the request is valid, meaning user already sent for participants and now choosed some
+            }, timing);
 
-                    var checks = document.getElementById("users").childNodes;
-                    var checked_array = [];
-                    checks.forEach(checksForEach);//fetching choosed users in order to send private message
+        }
 
-                    function checksForEach(node) {
-                        var tmp = document.getElementById(node.id);
-                        if (typeof tmp !== 'undefined' && tmp !== null)
-                            if (tmp.checked == true) checked_array.push(document.getElementById(node.id).name);
-                    }
-                    if (checked_array.length > 0) {// this condition is true if user have choosed at least one guy to send private message
-                        var messageJSON = {//providing requset message
-                            request: "private_message",
-                            message: {
-                                message: $('#private_message').val(),
-                                from: $('#chat_user').val(),
-                                to: checked_array
-                            }
+        element.fadeOut(timing);
+
+    }
+
+    setTimeout(() => fadeOut(loading, 4), 300);
+
+    setTimeout(() => loading.remove(), 700);
+
+});
+
+document.addEventListener("DOMContentLoaded", event => {
+
+    selector("#reload_page").onclick = event => [event.preventDefault(), location.reload()];
+
+    //starting connecting socket and stay connected for ever
+    var socket = new WebSocket("ws://localhost:15000/server.php");
+
+    // if connected ro a websocket on event will show sign up
+    socket.onopen = event => {
+
+        selector("#server_error").classList.add("hide");
+
+        selector("#server_status").innerHTML = "Server is online! Enter a unique name to join the chat!";
+
+    }
+
+    // whenever a message (data) is recieved, it'll fetch it and do something about the recieved message
+    socket.onmessage = event => {
+
+        // logging every recieved data in console , for developers only, you may comment this line
+        console.log(event.data);
+
+        // parsing (Json decoding) message
+        var Data = JSON.parse(event.data);
+
+        var element = document.getElementById("sign_up");
+
+        // this condition is true, if the user didin't sign up yet
+        if (typeof (element) != 'undefined' && element != null) {
+            
+
+            // if signing up wasn't succesful...showing Errors
+            if (Data.request == "error") selector("#master_errors").innerHTML = Data.error;
+            
+            // if signing up was succesful:
+            else {
+                
+                if (Data.request == "message") {
+
+                    // displaying chat box and buttons instead of signing up form
+                    try {
+                        document.getElementById("master_errors").innerHTML = "";
+                        document.getElementById("server_status").innerHTML = "";
+                        document.getElementById("sign_up").setAttribute("name", "frmChat");
+                        document.getElementById("sign_up").setAttribute("id", "frmChat");
+                        document.getElementById("nothing").setAttribute("id", "chat_box");
+                        document.getElementById("btnSend").setAttribute("name", "send_chat_message");
+                        document.getElementById("btnSend").setAttribute("value", "Send");
+                        document.getElementById("chat_message").hidden = false;
+                        document.getElementById("chat_message").required = true;
+                        document.getElementById("chat_message").value = "";
+                        document.getElementById("chat_user").hidden = true;
+                        ["users_box", "show_users", "leave"].forEach(element => selector(`#${element}`).classList.remove("hide"));
+                    } catch (e) { }
+
+                    // sending a refresh_users request to server if user pressed button
+                    selector("#refresh_users").addEventListener("click", event => {
+
+                        // prevents page reloading
+                        event.preventDefault();
+                        // providing requset message
+                        var messageJSON = {
+                            request: "participants",
+                            from: selector("#chat_user").value
                         };
-                        socket.send(JSON.stringify(messageJSON));//sedning Json encoded request 
-                    } else alert("You didn't choose any user!"); //alerting error if user didn't chose anyone but pressed the button
+
+                        // sedning Json encoded request 
+                        socket.send(JSON.stringify(messageJSON));
+
+                    });
+
+                    selector("#refresh_users").click();
+
+                    // setInterval(() => {
+                        
+                    //     if (
+                    //         (selector("#private_message").value.trim() == '') &&
+                    //         (selector("#chat_message").value.trim() == '')
+                    //     ) selector("#refresh_users").click();
+
+                    // }, 1000); // 1s
+
+                    selector("#show_users").addEventListener("click", event => [selector("#refresh_users").click(), selector("#users_box").classList.toggle("active")]);
+
+                    //seting type of message
+                    var type = (Data.message.type == "server") ? "server_" : (Data.message.from == tools.selector("#chat_user").value) ? "self_" : "ordinary_";
+
+                    // Showing messages one from server and one from self
+                    showMessage("<div class='" + type + "message'>" + createText(Data.message.message) + "</div>");
+                    
+                } else selector("#master_errors").innerHTML = "Unknown Error!";
+
+            }
+            
+        }
+        
+        // this else will execute when user successfully signed up
+        else {
+            
+            // handling message if the data request was a message
+            if (Data.request == "message") {
+
+                // setting type of displaying message if it was from server
+                if (Data.message.type == "server") showMessage("<p class='server_message_i'>" + createText(Data.message.message) + "</p>");
+
+                // setting type of displaying message if it was a public\private\private_response message
+                else {
+
+                    // if the message was from user himself
+                    if (Data.message.from == selector("#chat_user").value) {
+                        
+                        var svg_msg_box = `<svg width="9px" height="20px" viewbox="0 0 9 20" class="svg_msg_box flip"><svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20"><g fill="none"><path class="svg_fill_msg_box" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path></g></svg></svg>`;
+
+                        // showing public typed self message 
+                        if (Data.message.type == "public") showMessage("<div align='right' dir='auto'><div class='self_chat_input'>" + createText(Data.message.message) + svg_msg_box + "</div></div>");
+
+                        // showing private_response typed message : This will recieve if sending a private message was succesfull
+                        else if (Data.message.type == "private_response") {
+
+                            var private_info = "<span class='wt'>&lt;Private Message&gt; to ";
+
+                            // showing guys that recieved your private message
+
+                            var tmp_name = [];
+
+                            (Data.message.to).forEach(data => tmp_name.push(createText(data)));
+
+                            private_info += tmp_name.join(", ");
+
+                            private_info += ":</span><br>";
+
+                            var svg_msg_box = `<svg width="9px" height="20px" viewbox="0 0 9 20" class="svg_msg_box flip"><svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20"><g fill="none"><path class="svg_fill_msg_box" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path></g></svg></svg>`;
+
+                            showMessage("<div align='right' dir='auto'><div class='self_chat_input'>" + private_info + createText(Data.message.message) + svg_msg_box + "</div></div>");
+
+                        }
+
+                    } else {
+
+                        var svg_msg_box = `<svg width="9px" height="20px" viewbox="0 0 9 20" class="svg_msg_box flip-y"><svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20"><g fill="none"><path class="svg_fill_msg_box" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path></g></svg></svg>`;
+
+                        // showing public typed messages recieved from others
+                        if (Data.message.type == "public") showMessage("<div class='chat_box_message' dir='auto'>" + createText(Data.message.from) + ":<br> <div class='chat_input'>" + createText(Data.message.message) + "</div>" + svg_msg_box + "</div>");
+
+                        // showing private typed messages recieved from others
+                        else if (Data.message.type == "private") {
+
+                            var private_info = "<span> &lt;Private Message&gt; </span>";
+
+                            showMessage("<div class='chat_box_message' dir='auto'>" + createText(Data.message.from) + private_info + ":<br> <div class='chat_input'>" + createText(Data.message.message) + "</div>" + svg_msg_box + "</div>");
+
+                        }
+
+                    }
+
                 }
+
+            }
+
+            // showing response recieved from server in order to get chat participants (attendees)
+            else if (Data.request == "participants") {
+
+                var delNode = document.getElementById("user_names");
+                
+                while (delNode.firstChild) delNode.removeChild(delNode.lastChild);
+
+                // show each guy in chat as a choice to send message
+                Data.participants.forEach(user => {
+
+                    var checkbox = document.createElement("input");
+
+                    checkbox.type = "checkbox";
+
+                    checkbox.classList.add("hide");
+
+                    var checkbox_label = document.createElement("label");
+
+                    checkbox_label.setAttribute("for", user);
+
+                    var checkbox_label_span = document.createElement("span");
+
+                    checkbox_label_span.innerText = checkbox.value = checkbox.name = checkbox.id = user;
+
+                    var checkbox_label_img_1 = new Image(25);
+
+                    checkbox_label_img_1.setAttribute("dark", "true")
+
+                    checkbox_label_img_1.src = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjRweCIgaGVpZ2h0PSIyNHB4IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8dGl0bGU+aWNfZmx1ZW50X2NoZWNrYm94X3VuY2hlY2tlZF8yNF9yZWd1bGFyPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IvCflI0tUHJvZHVjdC1JY29ucyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9ImljX2ZsdWVudF9jaGVja2JveF91bmNoZWNrZWRfMjRfcmVndWxhciIgZmlsbD0iIzIxMjEyMSIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPHBhdGggZD0iTTUuNzUsMyBMMTguMjUsMyBDMTkuNzY4NzgzMSwzIDIxLDQuMjMxMjE2OTQgMjEsNS43NSBMMjEsMTguMjUgQzIxLDE5Ljc2ODc4MzEgMTkuNzY4NzgzMSwyMSAxOC4yNSwyMSBMNS43NSwyMSBDNC4yMzEyMTY5NCwyMSAzLDE5Ljc2ODc4MzEgMywxOC4yNSBMMyw1Ljc1IEMzLDQuMjMxMjE2OTQgNC4yMzEyMTY5NCwzIDUuNzUsMyBaIE01Ljc1LDQuNSBDNS4wNTk2NDQwNiw0LjUgNC41LDUuMDU5NjQ0MDYgNC41LDUuNzUgTDQuNSwxOC4yNSBDNC41LDE4Ljk0MDM1NTkgNS4wNTk2NDQwNiwxOS41IDUuNzUsMTkuNSBMMTguMjUsMTkuNSBDMTguOTQwMzU1OSwxOS41IDE5LjUsMTguOTQwMzU1OSAxOS41LDE4LjI1IEwxOS41LDUuNzUgQzE5LjUsNS4wNTk2NDQwNiAxOC45NDAzNTU5LDQuNSAxOC4yNSw0LjUgTDUuNzUsNC41IFoiIGlkPSLwn46oQ29sb3IiPjwvcGF0aD4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg==";
+
+                    var checkbox_label_img_2 = new Image(25);
+
+                    checkbox_label_img_2.src = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjRweCIgaGVpZ2h0PSIyNHB4IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8dGl0bGU+aWNfZmx1ZW50X2NoZWNrYm94X2NoZWNrZWRfMjRfZmlsbGVkPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IvCflI0tUHJvZHVjdC1JY29ucyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9ImljX2ZsdWVudF9jaGVja2JveF9jaGVja2VkXzI0X2ZpbGxlZCIgZmlsbD0iIzI2YWYyNiIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPHBhdGggZD0iTTE4LDMgQzE5LjY1Njg1NDIsMyAyMSw0LjM0MzE0NTc1IDIxLDYgTDIxLDE4IEMyMSwxOS42NTY4NTQyIDE5LjY1Njg1NDIsMjEgMTgsMjEgTDYsMjEgQzQuMzQzMTQ1NzUsMjEgMywxOS42NTY4NTQyIDMsMTggTDMsNiBDMyw0LjM0MzE0NTc1IDQuMzQzMTQ1NzUsMyA2LDMgTDE4LDMgWiBNMTYuNDY5NjY5OSw3Ljk2OTY2OTkxIEwxMCwxNC40MzkzMzk4IEw3LjUzMDMzMDA5LDExLjk2OTY2OTkgQzcuMjM3NDM2ODcsMTEuNjc2Nzc2NyA2Ljc2MjU2MzEzLDExLjY3Njc3NjcgNi40Njk2Njk5MSwxMS45Njk2Njk5IEM2LjE3Njc3NjcsMTIuMjYyNTYzMSA2LjE3Njc3NjcsMTIuNzM3NDM2OSA2LjQ2OTY2OTkxLDEzLjAzMDMzMDEgTDkuNDY5NjY5OTEsMTYuMDMwMzMwMSBDOS43NjI1NjMxMywxNi4zMjMyMjMzIDEwLjIzNzQzNjksMTYuMzIzMjIzMyAxMC41MzAzMzAxLDE2LjAzMDMzMDEgTDE3LjUzMDMzMDEsOS4wMzAzMzAwOSBDMTcuODIzMjIzMyw4LjczNzQzNjg3IDE3LjgyMzIyMzMsOC4yNjI1NjMxMyAxNy41MzAzMzAxLDcuOTY5NjY5OTEgQzE3LjIzNzQzNjksNy42NzY3NzY3IDE2Ljc2MjU2MzEsNy42NzY3NzY3IDE2LjQ2OTY2OTksNy45Njk2Njk5MSBaIiBpZD0i8J+OqC1Db2xvciI+PC9wYXRoPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+";
+                        
+                    selector("#user_names").appendChild(checkbox);
+
+                    checkbox_label.appendChild(checkbox_label_img_1);
+
+                    checkbox_label.appendChild(checkbox_label_img_2);
+
+                    checkbox_label.appendChild(checkbox_label_span);
+
+                    selector("#user_names").appendChild(checkbox_label);
+
+                    selector("#user_names").appendChild(document.createElement("br"));
+
+                });
+                
+                selector("#private_message").value = "";
+            
+            }
+
+            // if other things recieve from server, consider those error!
+            else selector("#master_errors").innerHTML = "Unknown Error!";
+
+            // cleaning textbox
+            selector("#chat_message").value = "";
+
+        }
+
+    }
+
+    // if there was an error related to socket
+    socket.onerror = event => showMessage("<div class='error'>Problem due to some Error</div>");
+
+    // if socked was closed by server
+    socket.onclose = event => {
+
+        selector("#server_error > h2").innerText = "Connection Closed";
+
+        selector("#server_error").classList.remove("hide");
+
+    };
+
+    // sending a sign_up\message request to server if user pressed button
+    selector("#sign_up").addEventListener("submit", event => {
+
+        // prevents page reloading
+        event.preventDefault();
+
+        var testelement = document.getElementById("sign_up");
+
+        // checking if user hav'nt already signed up
+        if (typeof (testelement) != 'undefined' && testelement != null) {
+
+            // providing requset
+            var messageJSON = {
+                request: "sign_up",
+                name: selector("#chat_user").value,
+            };
+
+            // // sedning Json encoded request
+            socket.send(JSON.stringify(messageJSON));
+
+        }
+        
+        // this else is true when user is already signed up and wants to send message
+        else {
+
+            // providing requset message
+            var messageJSON = {
+                request: "public_message",
+                message: {
+                    message: selector("#chat_message").value,
+                    from: selector("#chat_user").value
+                }
+            };
+
+            // sedning Json encoded request
+            socket.send(JSON.stringify(messageJSON));
+
+            // cleaning textbox
+            selector("#chat_message").value = "";
+
+        }
+
+    });
+
+    // sending a leave_chat request to server if user pressed button
+    selector("#leave").addEventListener("click", event => {
+
+        // prevents page reloading
+        event.preventDefault();
+
+        // providing requset message
+        var messageJSON = {
+            request: "leave",
+            from: selector("#chat_user").value
+        };
+
+        // sedning Json encoded request 
+        socket.send(JSON.stringify(messageJSON));
+
+        // reloading the page
+        window.location.reload(false);
+
+    });
+
+    // sending a private_message request to server if user pressed button
+    selector("#users").addEventListener("submit", event => {
+
+        // prevents page reloading
+        event.preventDefault();
+
+        var testelement = selector("#sendPrivateMessage");
+
+        // checking if the the request is valid, meaning user already sent for participants and now choosed some
+        if (typeof (testelement) != 'undefined' && testelement != null) {
+
+            var checks = selector("#user_names").childNodes;
+
+            var checked_array = [];
+
+            // fetching choosed users in order to send private message
+            checks.forEach(node => {
+
+                var tmp = document.getElementById(node.id);
+
+                if (tmp) if (tmp.checked == true) checked_array.push(tmp.name);
+
             });
-        });
-    </script>
-    <!-- ==============================main architecture of the HTML page================================ -->
-    <div style="width: 600px;height: 700px;float: left;">
-        <div id="master_errors" class="error"></div>
-        <div id="server_status" class="error">Server is offline!</div>
-        <form name="sign_up" id="sign_up" style="display: inline;">
-            <div id="nothing"></div>
-            <input type="text" name="chat_user" id="chat_user" placeholder="Name" class="chat_input" style="width: 100%;" required />
-            <input type="text" name="chat_message" id="chat_message" placeholder="Message" style="width: 570px;" hidden />
-            <br>
-            <input type="submit" id="btnSend" name="sign_me_up" value="Enter Chat!" style="display: inline;">
-        </form>
-        <form id="paricipants" style="display: inline;">
-            <input type="submit" id="getParticipants" name="getParticipants" value="See users" style="display: inline;visibility: hidden;">
-        </form>
-        <form id="leave" style="display: inline;">
-            <input type="submit" id="leaveChat" name="leaveChat" value="leave" style="display: inline;visibility: hidden;">
-        </form>
-    </div>
-    <div style="float: left;">
-        <form id="users" style="display: inline;">
-        </form>
-    </div>
-</body>
-        <!-- ========================================================================
-        ==================CLIENT SCRIPT USING HTML-CSS-JAVASCRIPT====================
-        ==============SOCKET PROGRAMING============NETWORK PROJECT===================
-        =================================TadavomnisT=================================
-        ==========================GNU LICENCED SCRIPT============================ -->
+
+            // this condition is true if user have choosed at least one guy to send private message
+            if (checked_array.length > 0) {
+
+                // providing requset message
+                var messageJSON = {
+                    request: "private_message",
+                    message: {
+                        message: selector("#private_message").value,
+                        from: selector("#chat_user").value,
+                        to: checked_array
+                    }
+                };
+
+                // sedning Json encoded request 
+                socket.send(JSON.stringify(messageJSON));
+
+                selector("#refresh_users").click();
+
+                selector("#users_box").classList.remove("active");
+
+            }
+
+            // alerting error if user didn't chose anyone but pressed the button
+            else alert("You didn't choose any user!");
+
+        }
+
+    });
+
+});
+        </script>
+    </head>
+    <body>
+        <section id="loading"></section>
+        <section id="server_error">
+            <h2>Server is offline!</h2>
+            <button id="reload_page" class="btn" title="Click the button below to try reloading.">Reload</button>
+        </section>
+        <div id="main_box">
+            <div id="master_errors" class="error"></div>
+            <section id="server_status"></section>
+            <form name="sign_up" id="sign_up">
+                <div id="nothing" scroll="hide"></div>
+                <input type="text" name="chat_user" id="chat_user" class="message_input" placeholder="Name" minlength="2" maxlength="22" translate="no" spellcheck="false" required />
+                <input type="text" name="chat_message" id="chat_message" maxlength="225" class="message_input" placeholder="Message" style="width: 570px;" hidden />
+                <br>
+                <div id="button_box">
+                    <input type="submit" id="btnSend" name="sign_me_up" value="Enter Chat!" class="btn">
+                    <input type="button" id="leave" name="leave" value="leave" class="btn hide">
+                </div>
+            </form>
+        </div>
+        <button id="show_users" class="hide">
+            <img id="people-white" dark src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjhweCIgaGVpZ2h0PSIyOHB4IiB2aWV3Qm94PSIwIDAgMjggMjgiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8dGl0bGU+aWNfZmx1ZW50X3Blb3BsZV8yOF9yZWd1bGFyPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGcgaWQ9IvCflI0tUHJvZHVjdC1JY29ucyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9ImljX2ZsdWVudF9wZW9wbGVfMjhfcmVndWxhciIgZmlsbD0iIzIxMjEyMSIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPHBhdGggZD0iTTQsMTYgTDE1LDE2LjAwMSBDMTYuMDUzODE4MiwxNi4wMDEgMTYuOTE4MTE1NywxNi44MTY0ODU1IDE2Ljk5NDUxMDksMTcuODUxNjg0MiBMMTcsMTguMDAxIEwxNywyMC41IEMxNi45OTksMjQuNyAxMi43MTMsMjYgOS41LDI2IEM2LjM1MTI2LDI2IDIuMTcxMDUwNCwyNC43NTE0OCAyLjAwNTEwMTUxLDIwLjc0ODUzMjggTDIsMjAuNSBMMiwxOCBDMiwxNi45NDYxODE4IDIuODE2Mzk2NjksMTYuMDgxODg0MyAzLjg1MDgwODQxLDE2LjAwNTQ4OTEgTDQsMTYgWiBNMjQsMTYgTDI0LjE0OTE5MTYsMTYuMDA1NDg5MSBDMjUuMTMxODgyNywxNi4wNzgwNjQ1IDI1LjkxNzgxNTMsMTYuODYxNzIxOCAyNS45OTM5NTE4LDE3Ljg0MzQyMzUgTDI2LDE4IEwyNiwyMCBDMjUuOTk5LDIzLjc1OSAyMi41NywyNSAyMCwyNSBDMTguOTQyLDI1IDE3Ljc0MSwyNC43ODUgMTYuNjkxLDI0LjI3NSBDMTcuMDA5LDIzLjg5NyAxNy4yNzgsMjMuNDc3IDE3LjQ4OCwyMy4wMDcgQzE4LjQ0NTYsMjMuNDI3IDE5LjQ3ODk4NjcsMjMuNDkyNDU3OCAxOS45MTU3Nzg0LDIzLjQ5OTMxODggTDIwLjIwNDM0MzMsMjMuNDk2MzIyNSBDMjEuMjQwMDU1NiwyMy40NjA2NjI5IDI0LjMzNDc2NiwyMy4xMTE2NTcyIDI0LjQ5MzY0NzEsMjAuMjMyNTkxNCBMMjQuNSwyMCBMMjQuNSwxOCBDMjQuNSwxNy43NTQ2NjY3IDI0LjMyMjIyMjIsMTcuNTUwNDE5OCAyNC4wODk1NzQ4LDE3LjUwODA2MDQgTDI0LDE3LjUgTDE3Ljk0OSwxNy41MDEgQzE3Ljg2NSwxNi45OTk2MjUgMTcuNjU1NDM3NSwxNi41NDM0MjE5IDE3LjM1NDQ3ODUsMTYuMTYwNTI3MyBMMTcuMjIsMTYuMDAxIEwyNCwxNiBaIE00LDE3LjUgTDMuODk5MzQ0LDE3LjUxIEMzLjc3NDk2LDE3LjUzNTI4IDMuNjksMTcuNjAyOCAzLjY0NiwxNy42NDYgQzMuNjAyOCwxNy42OSAzLjUzNTI4LDE3Ljc3NDMyIDMuNTEsMTcuODk4OTYgTDMuNSwxOCBMMy41LDIwLjUgQzMuNSwyMS44MzkgNC4wODcsMjIuODI5IDUuMjk1LDIzLjUyNSBDNi4yOTEzNTcxNCwyNC4xMDA3MTQzIDcuNjg0MzQ2OTQsMjQuNDQ3OTMzNyA5LjE1ODUxMDkzLDI0LjQ5NDU5OTEgTDkuNSwyNC41IEw5LjkzNDg3MTEzLDI0LjQ4OTc4NDYgQzExLjQ1NTQ1NTQsMjQuNDIxOTA3MyAxNS4zMTQwMzcyLDIzLjkzMzE5NTEgMTUuNDkzNTE4MSwyMC43MzIyODAzIEwxNS41LDIwLjQ5OSBMMTUuNSwxOC4wMDEgQzE1LjUsMTcuNzU2NTU1NiAxNS4zMjIyMjIyLDE3LjU1MTYxNzMgMTUuMDg5NTc0OCwxNy41MDkwOTMzIEwxNSwxNy41MDEgTDQsMTcuNSBaIE05LjUsMyBDMTIuNTM4LDMgMTUsNS40NjMgMTUsOC41IEMxNSwxMS41MzcgMTIuNTM4LDE0IDkuNSwxNCBDNi40NjIsMTQgNCwxMS41MzcgNCw4LjUgQzQsNS40NjMgNi40NjIsMyA5LjUsMyBaIE0yMC41LDUgQzIyLjk4NSw1IDI1LDcuMDE1IDI1LDkuNSBDMjUsMTEuOTg1IDIyLjk4NSwxNCAyMC41LDE0IEMxOC4wMTUsMTQgMTYsMTEuOTg1IDE2LDkuNSBDMTYsNy4wMTUgMTguMDE1LDUgMjAuNSw1IFogTTkuNSw0LjUgQzcuMjk0LDQuNSA1LjUsNi4yOTQgNS41LDguNSBDNS41LDEwLjcwNiA3LjI5NCwxMi41IDkuNSwxMi41IEMxMS43MDYsMTIuNSAxMy41LDEwLjcwNiAxMy41LDguNSBDMTMuNSw2LjI5NCAxMS43MDYsNC41IDkuNSw0LjUgWiBNMjAuNSw2LjUgQzE4Ljg0Niw2LjUgMTcuNSw3Ljg0NiAxNy41LDkuNSBDMTcuNSwxMS4xNTQgMTguODQ2LDEyLjUgMjAuNSwxMi41IEMyMi4xNTQsMTIuNSAyMy41LDExLjE1NCAyMy41LDkuNSBDMjMuNSw3Ljg0NiAyMi4xNTQsNi41IDIwLjUsNi41IFoiIGlkPSLwn46oLUNvbG9yIj48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=" alt="👥" loading="lazy">
+            <img id="people-black" dark src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjhweCIgaGVpZ2h0PSIyOHB4IiB2aWV3Qm94PSIwIDAgMjggMjgiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8dGl0bGU+aWNfZmx1ZW50X3Blb3BsZV8yOF9maWxsZWQ8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZyBpZD0i8J+UjS1Qcm9kdWN0LUljb25zIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iaWNfZmx1ZW50X3Blb3BsZV8yOF9maWxsZWQiIGZpbGw9IiMyMTIxMjEiIGZpbGwtcnVsZT0ibm9uemVybyI+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik00LDE2IEwxNSwxNi4wMDEgQzE2LjA1MzgxODIsMTYuMDAxIDE2LjkxODExNTcsMTYuODE2NDg1NSAxNi45OTQ1MTA5LDE3Ljg1MTY4NDIgTDE3LDE4LjAwMSBMMTcsMjAuNSBDMTYuOTk5LDI0LjcgMTIuNzEzLDI2IDkuNSwyNiBDNi4zNTEyNiwyNiAyLjE3MTA1MDQsMjQuNzUxNDggMi4wMDUxMDE1MSwyMC43NDg1MzI4IEwyLDIwLjUgTDIsMTggQzIsMTYuOTQ2MTgxOCAyLjgxNjM5NjY5LDE2LjA4MTg4NDMgMy44NTA4MDg0MSwxNi4wMDU0ODkxIEw0LDE2IFogTTE3LjIyLDE2LjAwMSBMMjQsMTYgQzI1LjA1MzgxODIsMTYgMjUuOTE4MTE1NywxNi44MTYzOTY3IDI1Ljk5NDUxMDksMTcuODUwODA4NCBMMjYsMTggTDI2LDIwIEMyNS45OTksMjMuNzU5IDIyLjU3LDI1IDIwLDI1IEMxOC45NDIsMjUgMTcuNzQxLDI0Ljc4NSAxNi42OTEsMjQuMjc1IEMxNy40NDMyNjY3LDIzLjM4MDg2NjcgMTcuOTMxNTg2NywyMi4yNDI4MjIyIDE3Ljk5MzM1MjYsMjAuODExMjcxNCBMMTgsMjAuNSBMMTgsMTguMDAxIEMxOCwxNy4yOTkxODE4IDE3Ljc1MTIzOTcsMTYuNjYwMTczNiAxNy4zNDYxMzA3LDE2LjE1MDA5MDkgTDE3LjIyLDE2LjAwMSBMMjQsMTYgTDE3LjIyLDE2LjAwMSBaIE05LjUsMyBDMTIuNTM3LDMgMTUsNS40NjMgMTUsOC41IEMxNSwxMS41MzcgMTIuNTM3LDE0IDkuNSwxNCBDNi40NjMsMTQgNCwxMS41MzcgNCw4LjUgQzQsNS40NjMgNi40NjMsMyA5LjUsMyBaIE0yMC41LDUgQzIyLjk4NSw1IDI1LDcuMDE1IDI1LDkuNSBDMjUsMTEuOTg1IDIyLjk4NSwxNCAyMC41LDE0IEMxOC4wMTUsMTQgMTYsMTEuOTg1IDE2LDkuNSBDMTYsNy4wMTUgMTguMDE1LDUgMjAuNSw1IFoiIGlkPSLwn46oLUNvbG9yIj48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=" alt="👥" loading="lazy">
+        </button>
+        <section id="users_box" class="hide">
+            <form id="users">
+                <input type="button" name="refresh_users" id="refresh_users" value="refresh users" class="btn" />
+                <div id="user_names" class="select" scroll="hide"></div>
+                <input type="text" name="private_message" id="private_message" maxlength="225" class="message_input" placeholder="private message" translate="no" spellcheck="false" required />
+                <input type="submit" id="sendPrivateMessage" name="sendPrivateMessage" value="send private message!" class="btn" />
+            </form>
+        </section>
+    </body>
 </html>

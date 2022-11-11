@@ -29,8 +29,9 @@ it means you haven't load `socket` extetion properly, so then if you have instal
 `;extension=php_sockets.dll ` to `extension=php_sockets.dll `
 in your `php.ini` file , else in case that you didn't install it, in windows you should download `.dll` file and put in in dll directory in linux and mac you can install it by commandline .
 
-## ScreenShot:
-![alt text](https://github.com/TadavomnisT/php_javascript_chatroom/blob/main/Screenshot.png)
+## Demo:
+
+#### [![ScreenShot_Demo](screenshot_demo.png)](https://github.com/msfpt/chatroom/raw/main/demo.mp4)
 
 ## Development Info
 * Homepage: https://github.com/TadavomnisT/php_javascript_chatroom/
