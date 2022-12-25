@@ -42,6 +42,6 @@ in your `php.ini` file , else in case that you didn't install it, in windows you
 * Contact: http://TadavomnisT.iR
 
 ## License
-* Opened source so, GNU licensed :)
+*  GPL-3.0 license 
 
 Have fun!
