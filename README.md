@@ -31,7 +31,7 @@ in your `php.ini` file , else in case that you didn't install it, in windows you
 
 ## Demo:
 
-#### [![ScreenShot_Demo](screenshot_demo.png)](https://github.com/msfpt/chatroom/raw/main/demo.mp4)
+#### [![ScreenShot_Demo](./Documents/screenshot_demo.png)](./Documents/demo.mp4)
 
 ## Development Info
 * Homepage: https://github.com/TadavomnisT/php_javascript_chatroom/
